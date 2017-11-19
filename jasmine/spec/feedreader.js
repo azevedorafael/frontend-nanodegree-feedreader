@@ -35,7 +35,7 @@ $(function () {
             allFeeds.forEach(element => {
                 expect(element.url).toBeDefined();
                 expect(element.url).not.toBeNull();
-                expect(element.url.length).toBeGreaterThan(10);
+                expect(element.url.length).toBeGreaterThan(0);
             });
         });
 
@@ -47,7 +47,7 @@ $(function () {
             allFeeds.forEach(element => {
                 expect(element.name).toBeDefined();
                 expect(element.name).not.toBeNull();
-                expect(element.name.length).toBeGreaterThan(5);
+                expect(element.name.length).toBeGreaterThan(0);
             });
         });
     });
@@ -95,7 +95,7 @@ $(function () {
         });
 
         it('has at least a single entry element after loadFeed', function () {
-            expect(feed.has('.entry').length).toBeGreaterThan(0);
+            expect($('.feed .entry').length).toBeGreaterThan(0);
         });
     });
 
@@ -106,14 +106,14 @@ $(function () {
          * Remember, loadFeed() is asynchronous.
          */
         beforeEach(function (callback) {
-            loadFeed(0);
-            prevTopPost = $('.entry').eq(0).html();
-
-            loadFeed(1, callback);
+            loadFeed(0, function() {
+                prevTopPost = $('.entry').eq(0).html();
+                loadFeed(1, callback);
+            });
         });
 
         it('when a new feed is loaded by the loadFeed function that the content actually changes', function () {
-            expect($('.entry').eq(0).html()).not.toEqual(prevTopPost);
+            expect($('.feed').html()).not.toEqual(prevTopPost);
         });
     });
 
