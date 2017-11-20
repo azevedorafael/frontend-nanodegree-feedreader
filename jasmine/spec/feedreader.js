@@ -71,10 +71,18 @@ $(function () {
          */
         it('display/hide when clicked', function () {
 
+            if($('body').hasClass('menu-hidden')){
+                $('.menu-icon-link').click();
+                expect($('body').hasClass('menu-hidden')).toBe(false);
+            }
+            else{
+                $('.menu-icon-link').click();
+                expect($('body').hasClass('menu-hidden')).toBe(true);
+            }
+
+            //close the menu after the test
             $('.menu-icon-link').click();
-            expect($('body').hasClass('menu-hidden')).toBe(false);
-            $('.menu-icon-link').click();
-            expect($('body').hasClass('menu-hidden')).toBe(true);
+
         });
     });
 
@@ -88,10 +96,10 @@ $(function () {
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
 
-        var feed = $('.feed');
-
-        beforeEach(function (done) {
-            loadFeed(0, done);
+        beforeEach(function(done) {
+            loadFeed(0, function() {
+                done();
+            });
         });
 
         it('has at least a single entry element after loadFeed', function () {
@@ -108,12 +116,15 @@ $(function () {
         beforeEach(function (callback) {
             loadFeed(0, function() {
                 prevTopPost = $('.entry').eq(0).html();
-                loadFeed(1, callback);
+                loadFeed(1, function(){
+                    prevTopPost2 = $('.entry').eq(0).html();
+                    callback();
+                });
             });
         });
 
         it('when a new feed is loaded by the loadFeed function that the content actually changes', function () {
-            expect($('.feed').html()).not.toEqual(prevTopPost);
+            expect(prevTopPost).not.toMatch(prevTopPost2);
         });
     });
 
